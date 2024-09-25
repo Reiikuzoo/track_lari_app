@@ -27,21 +27,25 @@ class DatabaseHelper {
           password TEXT
         )
       ''');
-      // Tambahkan akun default jika diperlukan
-      String hashedPassword = _hashPassword('1234');
-      await db.insert('users', {'username': 'admin', 'password': hashedPassword});
+
+      //akun default
+      String hashedPassword = _hashPassword('test123');
+      print('Storing hashed password: $hashedPassword');
+      await db.insert('users', {'username': 'testlari', 'password': hashedPassword});
+      print('User added: testlari with hashed password: $hashedPassword');
     });
   }
 
   String _hashPassword(String password) {
-    final bytes = utf8.encode(password);
-    final hashed = sha256.convert(bytes);
-    return hashed.toString();
+    final bytes = utf8.encode(password); // Encode password masuk byte
+    final hashed = sha256.convert(bytes); // Hash make sha256
+    print('Hashed password: $hashed');  // Print hashed pw di debug 
+    return hashed.toString(); 
   }
 
   Future<bool> validateUser(String username, String password) async {
     final db = await database;
-    String hashedPassword = _hashPassword(password); // Hash the input password
+    String hashedPassword = _hashPassword(password); 
     final List<Map<String, dynamic>> result = await db.query(
       'users',
       where: 'username = ? AND password = ?',
@@ -50,8 +54,10 @@ class DatabaseHelper {
 
     // Debugging
     print("Validating user: $username with hashed password: $hashedPassword");
-    print("Query Result: $result"); // Debugging
+    print("Query Result: $result"); // Print query 
 
-    return result.isNotEmpty; // Return true if there are results
+    return result.isNotEmpty; 
   }
 }
+//commit fix robet auth
+//push 25/09/24
