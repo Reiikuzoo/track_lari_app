@@ -10,9 +10,22 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final DatabaseHelper _databaseHelper = DatabaseHelper(); // Inisialisasi DatabaseHelper
-  final TextEditingController _usernameController = TextEditingController(); // Controller untuk username
-  final TextEditingController _passwordController = TextEditingController(); // Controller untuk password
+  //hide pw
+  bool _hide = true;
+
+  void _hidepw() {
+    setState(() {
+      _hide = !_hide;
+    });
+  }
+
+  //confoig database
+  final DatabaseHelper _databaseHelper =
+      DatabaseHelper(); // Inisialisasi DatabaseHelper
+  final TextEditingController _usernameController =
+      TextEditingController(); // Controller untuk username
+  final TextEditingController _passwordController =
+      TextEditingController(); // Controller untuk password
 
   @override
   void dispose() {
@@ -28,16 +41,18 @@ class _LoginPageState extends State<LoginPage> {
     // Cek jika username atau password kosong
     if (username.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Username dan Password tidak boleh kosong')),
+        const SnackBar(
+            content: Text('Username dan Password tidak boleh kosong')),
       );
       return;
     }
 
-    print("Attempting to log in with Username: $username and Password: $password");
+    print(
+        "Attempting to log in with Username: $username and Password: $password");
 
     // Validasi menggunakan database
     bool isValidUser = await _databaseHelper.validateUser(username, password);
-    
+
     if (isValidUser) {
       // Arahkan ke dashboard setelah login berhasil
       Navigator.push(
@@ -63,17 +78,22 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               // Logo
               Image.asset(
-                'assets/image/logo-pussimpur.png', // Sesuaikan dengan path logo Anda
-                height: 150, // Atur ukuran logo
+                'assets/image/logo_pussimpur.png', // Sesuaikan dengan path logo Anda
+                height: 125, // Atur ukuran logo
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 10),
+              Image.asset(
+                'assets/image/logo_lari.png',
+                height: 135,
+              ),
+              const SizedBox(height: 20),
 
               // Teks 'masuk dengan akun'
               const Text(
-                'masuk dengan akun',
+                'Log In With Your Account',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -81,16 +101,18 @@ class _LoginPageState extends State<LoginPage> {
 
               // Input Username dengan ikon
               TextField(
-                controller: _usernameController, // Set controller untuk username
+                controller:
+                    _usernameController, // Set controller untuk username
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  hintText: 'nama pengguna',
-                  hintStyle: const TextStyle(color: Colors.white60),
+                  hintText: 'username',
+                  hintStyle: const TextStyle(
+                      color: Colors.white60, fontWeight: FontWeight.w900),
                   prefixIcon: const Icon(Icons.person, color: Colors.white),
                   filled: true,
                   fillColor: Colors.grey[800], // Warna input field
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(15),
                     borderSide: BorderSide.none,
                   ),
                 ),
@@ -98,23 +120,33 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 20),
 
               // Input Password dengan ikon
+              // Input Password dengan ikon
               TextField(
-                controller: _passwordController, // Set controller untuk password
-                obscureText: true,
+                controller:
+                    _passwordController, // Set controller untuk password
+                obscureText: _hide,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  hintText: 'kata sandi',
-                  hintStyle: const TextStyle(color: Colors.white60),
-                  prefixIcon: const Icon(Icons.lock, color: Colors.white),
+                  hintText: 'password',
+                  hintStyle: const TextStyle(
+                      color: Colors.white60, fontWeight: FontWeight.w900),
+                  prefixIcon:
+                      const Icon(Icons.lock_outline, color: Colors.white),
+                  suffixIcon: IconButton(
+                    onPressed: _hidepw,
+                    icon: Icon(_hide ? Icons.visibility_off : Icons.visibility),
+                    color: Colors.white,
+                  ),
                   filled: true,
                   fillColor: Colors.grey[800], // Warna input field
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(15),
                     borderSide: BorderSide.none,
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
+
+              const SizedBox(height: 20),
 
               // Tombol Masuk, ukurannya sama dengan TextField
               SizedBox(
@@ -122,17 +154,22 @@ class _LoginPageState extends State<LoginPage> {
                 child: ElevatedButton(
                   onPressed: _login, // Panggil fungsi login saat tombol ditekan
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey, // Warna tombol
+                    backgroundColor: const Color.fromARGB(
+                        255, 206, 202, 202), // Warna tombol
                     padding: const EdgeInsets.symmetric(
                       vertical: 16, // Atur tinggi tombol
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30), // Sudut tombol sama dengan input
+                      borderRadius: BorderRadius.circular(
+                          15), // Sudut tombol sama dengan input
                     ),
                   ),
                   child: const Text(
-                    'MASUK',
-                    style: TextStyle(color: Colors.black),
+                    'LOGIN',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 20),
                   ),
                 ),
               ),
