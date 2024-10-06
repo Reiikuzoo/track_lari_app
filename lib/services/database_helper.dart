@@ -28,6 +28,7 @@ class DatabaseHelper {
         )
       ''');
 
+
       //akun default
       String hashedPassword = _hashPassword('test123');
       print('Storing hashed password: $hashedPassword');

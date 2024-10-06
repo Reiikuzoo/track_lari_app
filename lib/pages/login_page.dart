@@ -57,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
       // Arahkan ke dashboard setelah login berhasil
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const DashboardPage()),
+        MaterialPageRoute(builder: (context) => DashboardPage()),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

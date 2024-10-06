@@ -33,6 +33,8 @@ dependencies:
   sqflite: ^2.0.0+4
   path: ^1.8.0
   crypto: ^3.0.1  # Check for the latest version
+  geolocator: ^9.0.0 # untuk fitur lacak lokasi
+  intl: ^0.17.0
 
 
   # The following adds the Cupertino Icons font to your application.
