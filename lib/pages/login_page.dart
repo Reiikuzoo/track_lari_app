@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, // Sesuaikan background dengan warna hitam
+      backgroundColor: Color(0xFF161616), // Sesuaikan background dengan warna hitam
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -81,18 +81,13 @@ class _LoginPageState extends State<LoginPage> {
                 'assets/image/logo_pussimpur.png', // Sesuaikan dengan path logo Anda
                 height: 125, // Atur ukuran logo
               ),
-              const SizedBox(height: 10),
-              Image.asset(
-                'assets/image/logo_lari.png',
-                height: 135,
-              ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 50),
 
               // Teks 'masuk dengan akun'
               const Text(
                 'Log In With Your Account',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Color(0xFFd9d9d9),
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
@@ -103,12 +98,12 @@ class _LoginPageState extends State<LoginPage> {
               TextField(
                 controller:
                     _usernameController, // Set controller untuk username
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color:  Color(0xFFd9d9d9),),
                 decoration: InputDecoration(
                   hintText: 'username',
                   hintStyle: const TextStyle(
-                      color: Colors.white60, fontWeight: FontWeight.w900),
-                  prefixIcon: const Icon(Icons.person, color: Colors.white),
+                      color:  Color(0xFFd9d9d9), fontWeight: FontWeight.w900),
+                  prefixIcon: const Icon(Icons.person, color: Color(0xFFd9d9d9)),
                   filled: true,
                   fillColor: Colors.grey[800], // Warna input field
                   border: OutlineInputBorder(
@@ -125,17 +120,17 @@ class _LoginPageState extends State<LoginPage> {
                 controller:
                     _passwordController, // Set controller untuk password
                 obscureText: _hide,
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color:  Color(0xFFd9d9d9)),
                 decoration: InputDecoration(
                   hintText: 'password',
                   hintStyle: const TextStyle(
-                      color: Colors.white60, fontWeight: FontWeight.w900),
+                      color: Color(0xFFd9d9d9), fontWeight: FontWeight.w900),
                   prefixIcon:
-                      const Icon(Icons.lock_outline, color: Colors.white),
+                      const Icon(Icons.lock_outline, color:  Color(0xFFd9d9d9)),
                   suffixIcon: IconButton(
                     onPressed: _hidepw,
                     icon: Icon(_hide ? Icons.visibility_off : Icons.visibility),
-                    color: Colors.white,
+                    color: Color(0xFFd9d9d9),
                   ),
                   filled: true,
                   fillColor: Colors.grey[800], // Warna input field
