@@ -81,7 +81,14 @@ class _LoginPageState extends State<LoginPage> {
                 'assets/image/logo_pussimpur.png', // Sesuaikan dengan path logo Anda
                 height: 125, // Atur ukuran logo
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 25),
+
+              Image.asset(
+                'assets/image/logobaru.jpg', // logo lari
+                height: 100, 
+              ),
+              const SizedBox(height: 40),
+
 
               // Teks 'masuk dengan akun'
               const Text(
