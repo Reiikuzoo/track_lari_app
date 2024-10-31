@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
+import 'package:permission_handler/permission_handler.dart'; // Add permission handler
 
 class MulaiPage extends StatefulWidget {
   @override
@@ -21,6 +22,20 @@ class _MulaiPageState extends State<MulaiPage> {
 
   bool _isTracking = false;
 
+  @override
+  void initState() {
+    super.initState();
+    requestActivityRecognitionPermission(); // Request permission on initialization
+  }
+
+  // Request Activity Recognition Permission
+  void requestActivityRecognitionPermission() async {
+    var status = await Permission.activityRecognition.status;
+    if (!status.isGranted) {
+      await Permission.activityRecognition.request();
+    }
+  }
+
   void _startStepCountStream() {
     _stepCountSubscription = Pedometer.stepCountStream.listen(
       _onStepCount,
@@ -31,11 +46,13 @@ class _MulaiPageState extends State<MulaiPage> {
   }
 
   void _onStepCount(StepCount stepCount) {
+    print("Current step count: ${stepCount.steps}"); // Debug logging
+
     // If it's the first step count, store it as the initial step count
     if (_initialStepCount == 0) {
       _initialStepCount = stepCount.steps;
     }
-    
+
     // Calculate steps taken since tracking started
     int stepsDuringSession = stepCount.steps - _initialStepCount;
 
@@ -44,7 +61,7 @@ class _MulaiPageState extends State<MulaiPage> {
       setState(() {
         _steps = stepsDuringSession;
         _calories = (_steps * 0.04).toInt(); // 0.04 calories per step
-        _distance = _steps * 0.0008; // Assume 0.8 meters per step
+        _distance = _steps * 0.7; // Assume 0.8 meters per step
       });
     }
   }
@@ -151,10 +168,10 @@ class _MulaiPageState extends State<MulaiPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Expanded(
-                          child: _buildMetricCard(Icons.directions_walk, 'Langkah', '$_steps', Colors.blue),
+                          child: _buildMetricCard(Icons.map, 'Jarak', '${_distance.toStringAsFixed(2)} Meter', Colors.green),
                         ),
                         Expanded(
-                          child: _buildMetricCard(Icons.local_fire_department, 'Kalori', '$_calories', Colors.orange),
+                          child: _buildMetricCard(Icons.directions_walk, 'Langkah', '$_steps', Colors.blue),
                         ),
                       ],
                     ),
@@ -162,7 +179,7 @@ class _MulaiPageState extends State<MulaiPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Expanded(
-                          child: _buildMetricCard(Icons.map, 'Jarak', '${_distance.toStringAsFixed(2)} km', Colors.green),
+                          child: _buildMetricCard(Icons.local_fire_department, 'Kalori', '$_calories', Colors.orange),
                         ),
                         Expanded(
                           child: _buildMetricCard(Icons.emoji_events, 'Peringkat', '$_rank', Colors.yellow),
@@ -231,7 +248,6 @@ class _MulaiPageState extends State<MulaiPage> {
       color: Colors.grey[900],
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,

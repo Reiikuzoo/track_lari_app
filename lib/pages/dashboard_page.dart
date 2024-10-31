@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart'; // Untuk tanggal dan waktu real-time
 import 'package:geolocator/geolocator.dart'; // Untuk pelacakan lokasi
 import 'goals_page.dart'; // Import halaman Goals
@@ -12,27 +13,34 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  String _currentDate = DateFormat('EEEE, d MMM y').format(DateTime.now());
-  String _currentTime = DateFormat('HH:mm').format(DateTime.now());
+  String _currentDate = '';
+  String _currentTime = '';
   String _location = "Belum dilacak";
-  int _currentIndex = 0; // Index untuk BottomNavigationBar
+  int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _updateTime();
-    _trackLocation(); // Panggil untuk melacak lokasi saat halaman dimuat
-  }
-
-  void _updateTime() {
-    Future.delayed(Duration(seconds: 1), () {
+    initializeDateFormatting('id_ID', null).then((_) {
       setState(() {
-        _currentTime = DateFormat('HH:mm').format(DateTime.now());
+        _currentDate = DateFormat('EEEE, d MMM y', 'id_ID').format(DateTime.now());
+        _currentTime = DateFormat('HH:mm', 'id_ID').format(DateTime.now());
       });
       _updateTime();
     });
+    _trackLocation();
   }
 
+  void _updateTime() async {
+    while (mounted) {
+      await Future.delayed(Duration(seconds: 1));
+      setState(() {
+        _currentTime = DateFormat('HH:mm', 'id_ID').format(DateTime.now());
+      });
+    }
+  }
+
+  
   Future<void> _trackLocation() async {
     var status = await Permission.location.status;
 
@@ -213,17 +221,17 @@ class _DashboardPageState extends State<DashboardPage> {
                     );
                   },
                   child: Text(
-                    'Goals',
+                    'Pencapaian >',
                     style: TextStyle(color: Color(0xFFd9d9d9)),
                   ),
                 ),
               ],
             ),
             SizedBox(height: 20),
+            _buildProgressIndicator(Icons.map, '8000 Meter', 0.4, Colors.green),
             _buildProgressIndicator(Icons.directions_walk, '10000 Langkah', 0.8, Colors.blue),
             _buildProgressIndicator(Icons.local_fire_department, '500 Kkal', 0.6, Colors.orange),
             _buildProgressIndicator(Icons.timer, '20 Menit', 0.5, Colors.yellow),
-            _buildProgressIndicator(Icons.map, '4000 m', 0.4, Colors.green),
             SizedBox(height: 20),
             Spacer(),
             SizedBox(

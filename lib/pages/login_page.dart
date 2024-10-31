@@ -83,12 +83,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 25),
 
-              Image.asset(
-                'assets/image/logobaru.jpg', // logo lari
-                height: 100, 
-              ),
-              const SizedBox(height: 40),
-
 
               // Teks 'masuk dengan akun'
               const Text(
