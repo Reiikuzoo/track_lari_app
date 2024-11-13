@@ -1,35 +1,89 @@
 import 'package:flutter/material.dart';
 
 class GoalsPage extends StatelessWidget {
+  const GoalsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color(0xFF161616),
       appBar: AppBar(
-        title: Text('Goals'),
-        backgroundColor: Colors.black,
+        backgroundColor: const Color(0xFF161616),
+        title: const Text(
+          '16 Sep - 21 Sep 2024',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Tujuan Harian Anda',
-              style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+            // Distance Goal
+            _buildGoalProgress(
+              '4000/10000 Meter',
+              Icons.location_on,
+              Colors.green,
+              0.4,
             ),
-            SizedBox(height: 20),
-            _buildGoalProgress('Langkah', '10000 Langkah', 8000, Colors.blue),
-            _buildGoalProgress('Kalori', '500 Kkal', 300, Colors.orange),
-            _buildGoalProgress('Waktu', '20 Menit', 15, Colors.yellow),
-            _buildGoalProgress('Jarak', '4000 m', 2500, Colors.green),
-            SizedBox(height: 40),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context); // Kembali ke dashboard
-                },
-                child: Text('Kembali'),
+            const SizedBox(height: 20),
+            // Steps Goal
+            _buildGoalProgress(
+              '8000/20000 Langkah',
+              Icons.directions_walk,
+              Colors.blue,
+              0.4,
+            ),
+            const SizedBox(height: 20),
+            // Calories Goal
+            _buildGoalProgress(
+              '500/1000 Kkal',
+              Icons.local_fire_department,
+              Colors.orange,
+              0.5,
+            ),
+            const SizedBox(height: 30),
+            // Ranking Section
+            const Text(
+              '🏆 Peringkat Saya',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: const Color(0xFF2A2A2A),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                children: const [
+                  Text(
+                    '🏆 Peringkat 🏆',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    '2',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 48,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -38,26 +92,32 @@ class GoalsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildGoalProgress(String label, String goal, int current, Color color) {
-    double progress = current / 10000; // Contoh hitungan progress (ubah sesuai logika yang dibutuhkan)
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '$label: $current / $goal',
-            style: TextStyle(color: Colors.white, fontSize: 18),
-          ),
-          SizedBox(height: 8),
-          LinearProgressIndicator(
-            value: progress,
-            backgroundColor: Colors.grey,
-            color: color,
-            minHeight: 10,
-          ),
-        ],
-      ),
+  Widget _buildGoalProgress(String goal, IconData icon, Color color, double progress) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(icon, color: color, size: 24),
+            const SizedBox(width: 8),
+            Text(
+              goal,
+              style: TextStyle(
+                color: color,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        LinearProgressIndicator(
+          value: progress,
+          backgroundColor: Colors.grey[800],
+          color: color,
+          minHeight: 10,
+        ),
+      ],
     );
   }
 }

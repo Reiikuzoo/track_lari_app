@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF161616), // Sesuaikan background dengan warna hitam
+      backgroundColor: const Color(0xFF161616), // Sesuaikan background dengan warna hitam
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -131,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                   suffixIcon: IconButton(
                     onPressed: _hidepw,
                     icon: Icon(_hide ? Icons.visibility_off : Icons.visibility),
-                    color: Color(0xFFd9d9d9),
+                    color: const Color(0xFFd9d9d9),
                   ),
                   filled: true,
                   fillColor: Colors.grey[800], // Warna input field

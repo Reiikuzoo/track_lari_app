@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
-import 'package:permission_handler/permission_handler.dart'; // Add permission handler
+import 'package:permission_handler/permission_handler.dart';
 
 class MulaiPage extends StatefulWidget {
+  const MulaiPage({super.key});
+
   @override
   _MulaiPageState createState() => _MulaiPageState();
 }
@@ -16,11 +18,14 @@ class _MulaiPageState extends State<MulaiPage> {
   int _steps = 0;
   int _calories = 0;
   double _distance = 0.0;
-  int _rank = 0;
+  double _speed = 0.0; // Speed in meters per second
+
+  final int _rank = 0;
   late StreamSubscription<StepCount> _stepCountSubscription;
   int _initialStepCount = 0;
 
   bool _isTracking = false;
+  bool _isPaused = false;
 
   @override
   void initState() {
@@ -61,7 +66,7 @@ class _MulaiPageState extends State<MulaiPage> {
       setState(() {
         _steps = stepsDuringSession;
         _calories = (_steps * 0.04).toInt(); // 0.04 calories per step
-        _distance = _steps * 0.7; // Assume 0.8 meters per step
+        _distance = _steps * 0.7; // Assume 0.7 meters per step
       });
     }
   }
@@ -71,15 +76,51 @@ class _MulaiPageState extends State<MulaiPage> {
 
     setState(() {
       _isTracking = true;
+      _isPaused = false;
     });
 
     _initialStepCount = 0; // Reset initial step count when starting
     _startStepCountStream();
 
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _seconds++;
         _formattedTime = _formatDuration(_seconds);
+
+        // Calculate speed in meters per second
+        if (_seconds > 0) {
+          _speed = _distance / _seconds;
+        }
+      });
+    });
+  }
+
+  void _pauseTracking() {
+    if (!_isTracking || _isPaused) return;
+
+    setState(() {
+      _isPaused = true;
+    });
+    _timer.cancel();
+    _stepCountSubscription.pause();
+  }
+
+  void _resumeTracking() {
+    if (!_isTracking || !_isPaused) return;
+
+    setState(() {
+      _isPaused = false;
+    });
+    _startStepCountStream();
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        _seconds++;
+        _formattedTime = _formatDuration(_seconds);
+
+        if (_seconds > 0) {
+          _speed = _distance / _seconds;
+        }
       });
     });
   }
@@ -87,6 +128,14 @@ class _MulaiPageState extends State<MulaiPage> {
   void _stopTracking() {
     setState(() {
       _isTracking = false;
+      _isPaused = false;
+      _seconds = 0;
+      _formattedTime = "00:00:00";
+      _steps = 0;
+      _calories = 0;
+      _distance = 0.0;
+      _speed = 0.0;
+      _initialStepCount = 0;
     });
     _timer.cancel();
     _stepCountSubscription.cancel();
@@ -112,7 +161,7 @@ class _MulaiPageState extends State<MulaiPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF161616),
+      backgroundColor: const Color(0xFF161616),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -122,12 +171,12 @@ class _MulaiPageState extends State<MulaiPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.arrow_back, color: Colors.white),
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
                     onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
-                  Text(
+                  const Text(
                     'Mulai Olahraga',
                     style: TextStyle(
                       color: Color(0xFFd9d9d9),
@@ -135,22 +184,22 @@ class _MulaiPageState extends State<MulaiPage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(width: 48),
+                  const SizedBox(width: 48),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Center(
                 child: Column(
                   children: [
                     Text(
                       _formattedTime,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Color(0xFFd9d9d9),
                         fontSize: 48,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(
+                    const Text(
                       'Durasi',
                       style: TextStyle(
                         color: Color(0xFFd9d9d9),
@@ -160,7 +209,7 @@ class _MulaiPageState extends State<MulaiPage> {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Expanded(
                 child: Column(
                   children: [
@@ -170,8 +219,16 @@ class _MulaiPageState extends State<MulaiPage> {
                         Expanded(
                           child: _buildMetricCard(Icons.map, 'Jarak', '${_distance.toStringAsFixed(2)} Meter', Colors.green),
                         ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
                         Expanded(
                           child: _buildMetricCard(Icons.directions_walk, 'Langkah', '$_steps', Colors.blue),
+                        ),
+                        Expanded(
+                          child: _buildMetricCard(Icons.speed, 'Kecepatan', '${_speed.toStringAsFixed(2)} m/s', Colors.purple),
                         ),
                       ],
                     ),
@@ -189,56 +246,80 @@ class _MulaiPageState extends State<MulaiPage> {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                height: 60,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    backgroundColor: Color(0xFFd9d9d9),
-                  ),
-                  onPressed: _isTracking ? _stopTracking : _startTracking,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        _isTracking ? Icons.pause : Icons.directions_run,
-                        color: Color(0xFF161616),
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        _isTracking ? 'STOP' : 'MULAI',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF161616),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  if (_isTracking && !_isPaused)
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _pauseTracking,
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          backgroundColor: Colors.orange,
+                          padding: const EdgeInsets.symmetric(vertical: 16.0), // Atur padding vertikal untuk memperbesar tinggi tombol
+                          minimumSize: const Size.fromHeight(50), // Atur tinggi minimal tombol
+                        ),
+                        child: const Text(
+                          'PAUSE',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18, // Memperbesar ukuran font jika diinginkan
+                          ),
                         ),
                       ),
-                    ],
+                    ),
+                  if (_isPaused)
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _resumeTracking,
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          backgroundColor: Colors.blue,
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          minimumSize: const Size.fromHeight(50),
+                        ),
+                        child: const Text(
+                          'RESUME',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: _isTracking ? _stopTracking : _startTracking,
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        backgroundColor: const Color(0xFFd9d9d9),
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        minimumSize: const Size.fromHeight(50),
+                      ),
+                      child: Text(
+                        _isTracking ? 'STOP' : 'MULAI',
+                        style: const TextStyle(
+                          color: Color(0xFF161616),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-              SizedBox(height: 20),
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Personel'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Akun'),
-        ],
-        currentIndex: 0,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey,
-        onTap: (index) {
-          // Aksi untuk navigasi
-        },
       ),
     );
   }
@@ -253,9 +334,9 @@ class _MulaiPageState extends State<MulaiPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, color: color, size: 24),
-            SizedBox(height: 8),
-            Text(label, style: TextStyle(color: Colors.white, fontSize: 16)),
-            Text(value, style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Text(label, style: const TextStyle(color: Colors.white, fontSize: 16)),
+            Text(value, style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
           ],
         ),
       ),

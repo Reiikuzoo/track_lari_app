@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart'; // Untuk tanggal dan waktu real-time
 import 'package:geolocator/geolocator.dart'; // Untuk pelacakan lokasi
+import 'akun_page.dart';
 import 'goals_page.dart'; // Import halaman Goals
 import 'mulai_page.dart'; // Import halaman Mulai
 import 'package:permission_handler/permission_handler.dart'; // Untuk meminta izin lokasi
-import 'package:geocoding/geocoding.dart'; // Untuk reverse geocoding
+import 'package:geocoding/geocoding.dart';
+import 'personel_page.dart';
 
 class DashboardPage extends StatefulWidget {
+  const DashboardPage({super.key});
+
   @override
   _DashboardPageState createState() => _DashboardPageState();
 }
@@ -33,7 +37,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   void _updateTime() async {
     while (mounted) {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
       setState(() {
         _currentTime = DateFormat('HH:mm', 'id_ID').format(DateTime.now());
       });
@@ -91,13 +95,20 @@ class _DashboardPageState extends State<DashboardPage> {
     // Implementasikan navigasi ke halaman yang sesuai
     switch (index) {
       case 0:
-        // Navigasi ke halaman Home
+        // kosong
         break;
       case 1:
         // Navigasi ke halaman Personel
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => PersonelPage()),
+      );
         break;
       case 2:
-        // Navigasi ke halaman Akun
+        Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AkunPage()),
+      );
         break;
     }
   }
@@ -106,13 +117,13 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // Menghapus AppBar
-      backgroundColor: Color(0xFF161616),
+      backgroundColor: const Color(0xFF161616),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -120,24 +131,24 @@ class _DashboardPageState extends State<DashboardPage> {
                   width: 100,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF282828),
+                      backgroundColor: const Color(0xFF282828),
                     ),
                     onPressed: _onRunPressed,
-                    child: Text(
+                    child: const Text(
                       'LARI',
                       style: TextStyle(color: Color(0xFFd9d9d9)),
                     ),
                   ),
                 ),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 SizedBox(
                   width: 100,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF282828),
+                      backgroundColor: const Color(0xFF282828),
                     ),
                     onPressed: _onWalkPressed,
-                    child: Text(
+                    child: const Text(
                       'JALAN',
                       style: TextStyle(color: Color(0xFFd9d9d9)),
                     ),
@@ -145,7 +156,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -153,26 +164,26 @@ class _DashboardPageState extends State<DashboardPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
-                        color: Color(0xFF282828),
+                        color: const Color(0xFF282828),
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: Text(
                         _currentDate,
-                        style: TextStyle(color: Color(0xFFd9d9d9), fontSize: 18),
+                        style: const TextStyle(color: Color(0xFFd9d9d9), fontSize: 18),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Container(
-                      padding: EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
-                        color: Color(0xFF282828),
+                        color: const Color(0xFF282828),
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: Text(
                         _location,
-                        style: TextStyle(color: Color(0xFFd9d9d9)),
+                        style: const TextStyle(color: Color(0xFFd9d9d9)),
                       ),
                     ),
                   ],
@@ -181,23 +192,23 @@ class _DashboardPageState extends State<DashboardPage> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Container(
-                      padding: EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
-                        color: Color(0xFF282828),
+                        color: const Color(0xFF282828),
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: Text(
                         _currentTime,
-                        style: TextStyle(color: Color(0xFFd9d9d9), fontSize: 24),
+                        style: const TextStyle(color: Color(0xFFd9d9d9), fontSize: 24),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF282828),
+                        backgroundColor: const Color(0xFF282828),
                       ),
                       onPressed: _trackLocation,
-                      child: Text(
+                      child: const Text(
                         'Lacak',
                         style: TextStyle(color: Color(0xFFd9d9d9)),
                       ),
@@ -206,34 +217,38 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF282828),
+                    backgroundColor: const Color(0xFF282828),
                   ),
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => GoalsPage()),
                     );
+                    
                   },
-                  child: Text(
+                  child: const Text(
                     'Pencapaian >',
                     style: TextStyle(color: Color(0xFFd9d9d9)),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 20),
-            _buildProgressIndicator(Icons.map, '8000 Meter', 0.4, Colors.green),
-            _buildProgressIndicator(Icons.directions_walk, '10000 Langkah', 0.8, Colors.blue),
-            _buildProgressIndicator(Icons.local_fire_department, '500 Kkal', 0.6, Colors.orange),
-            _buildProgressIndicator(Icons.timer, '20 Menit', 0.5, Colors.yellow),
-            SizedBox(height: 20),
-            Spacer(),
+            const SizedBox(height: 20),
+            _buildProgressIndicator(Icons.map, '4000 Meter', 0.4, Colors.green),
+            const SizedBox(height: 20),
+            _buildProgressIndicator(Icons.directions_walk, '8000 Langkah', 0.8, Colors.blue),
+            const SizedBox(height: 20),
+            _buildProgressIndicator(Icons.local_fire_department, '500 Kkal', 0.5, Colors.orange),
+            const SizedBox(height: 20),
+            _buildProgressIndicator(Icons.timer, '20 Menit', 0.2, Colors.yellow),
+            const SizedBox(height: 20),
+            const Spacer(),
             SizedBox(
               width: double.infinity,
               height: 60,
@@ -242,7 +257,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  backgroundColor: Color(0xFFd9d9d9),
+                  backgroundColor: const Color(0xFFd9d9d9),
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -250,9 +265,9 @@ class _DashboardPageState extends State<DashboardPage> {
                     MaterialPageRoute(builder: (context) => MulaiPage()),
                   );
                 },
-                child: Text(
+                child: const Text(
                   'MULAI',
-                  style: TextStyle(color: Color(0xFF161616), fontSize: 20),
+                  style: TextStyle(color: Color(0xFF161616), fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -279,16 +294,16 @@ class _DashboardPageState extends State<DashboardPage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Icon(icon, color: color),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Expanded(
           child: LinearProgressIndicator(
             value: progress,
             color: color,
-            backgroundColor: Color(0xFF555555),
+            backgroundColor: const Color(0xFF555555),
           ),
         ),
-        SizedBox(width: 10),
-        Text(title, style: TextStyle(color: Color(0xFFd9d9d9))),
+        const SizedBox(width: 10),
+        Text(title, style: const TextStyle(color: Color(0xFFd9d9d9))),
       ],
     );
   }

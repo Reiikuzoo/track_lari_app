@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "610353387519",
+    "project_id": "tracklariapp",
+    "storage_bucket": "tracklariapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:610353387519:android:35940a96166b489e25b9ca",
+        "android_client_info": {
+          "package_name": "pussimpur.runwalk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAf2YOY8JIvOKGUec4Zz2A9QE86cHht_1g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
