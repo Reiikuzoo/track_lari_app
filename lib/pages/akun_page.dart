@@ -110,7 +110,7 @@ class _AkunPageState extends State<AkunPage> {
               ),
             ),
             const SizedBox(height: 20),
-            
+
             // Circular Profile Icons for Viewing Others
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -127,7 +127,7 @@ class _AkunPageState extends State<AkunPage> {
               }),
             ),
             const SizedBox(height: 20),
-            
+
             // Post Section
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -185,9 +185,12 @@ class _AkunPageState extends State<AkunPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       _buildStatInfo('Jarak', '4000m', Colors.green, Icons.map),
-                      _buildStatInfo('Langkah', '8000', Colors.blue, Icons.directions_walk),
-                      _buildStatInfo('Kkal', '500', Colors.orange, Icons.local_fire_department),
-                      _buildStatInfo('Durasi', '20mnt', Colors.purple, Icons.timer),
+                      _buildStatInfo('Langkah', '8000', Colors.blue,
+                          Icons.directions_walk),
+                      _buildStatInfo('Kkal', '500', Colors.orange,
+                          Icons.local_fire_department),
+                      _buildStatInfo(
+                          'Durasi', '20mnt', Colors.purple, Icons.timer),
                     ],
                   ),
                 ],
@@ -212,7 +215,8 @@ class _AkunPageState extends State<AkunPage> {
   }
 
   // Widget for displaying each statistic
-  Widget _buildStatInfo(String label, String value, Color color, IconData icon) {
+  Widget _buildStatInfo(
+      String label, String value, Color color, IconData icon) {
     return Column(
       children: [
         Icon(icon, color: color),

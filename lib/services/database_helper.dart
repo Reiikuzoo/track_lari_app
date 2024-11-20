@@ -1,3 +1,4 @@
+//dummy database authentication
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:crypto/crypto.dart';
