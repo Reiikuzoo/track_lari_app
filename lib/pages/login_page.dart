@@ -1,3 +1,5 @@
+import 'package:RunWalk/pages/akun_page.dart';
+import 'package:RunWalk/services/Auth_Service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dashboard_page.dart';
@@ -10,9 +12,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  //final _formKey = GlobalKey<FormState>();
+  //final _emailController = TextEditingController();
+  //final _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   bool _hide = true;
 
   void _togglePasswordVisibility() {
@@ -21,38 +26,42 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  Future<void> _login() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+ 
 
-    String email = _emailController.text.trim();
-    String password = _passwordController.text.trim();
+  // Future<void> _login() async {
+  //   if (!_formKey.currentState!.validate()) {
+  //     return;
+  //   }
 
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      // masuk ke halaman dashboard
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => DashboardPage()),
-      );
-    } on FirebaseAuthException catch (e) {
-      String errorMessage = e.message ?? "Terjadi kesalahan";
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
-      );
-    }
-  }
+  //   String email = _emailController.text.trim();
+  //   String password = _passwordController.text.trim();
 
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
+  //   try {
+  //     await FirebaseAuth.instance.signInWithEmailAndPassword(
+  //       email: email,
+  //       password: password,
+  //     );
+  //     // masuk ke halaman dashboard
+      
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => AkunPage()),
+  //     );
+
+  //   } on FirebaseAuthException catch (e) {
+  //     String errorMessage = e.message ?? "Terjadi kesalahan";
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text(errorMessage)),
+  //     );
+  //   }
+  // }
+
+  // @override
+  // void dispose() {
+  //   _emailController.dispose();
+  //   _passwordController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Form(
-            key: _formKey,
+           // key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -72,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 25),
                 const Text(
-                  'Log In With Your Email Account',
+                  'Log In RunWalk Pussimpur',
                   style: TextStyle(
                     color: Color(0xFFd9d9d9),
                     fontSize: 22,
@@ -96,12 +105,12 @@ class _LoginPageState extends State<LoginPage> {
                       borderSide: BorderSide.none,
                     ),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Email tidak boleh kosong';
-                    }
-                    return null;
-                  },
+                  // validator: (value) {
+                  //   if (value == null || value.isEmpty) {
+                  //     return 'Email tidak boleh kosong';
+                  //   }
+                  //   return null;
+                  // },
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
@@ -127,18 +136,20 @@ class _LoginPageState extends State<LoginPage> {
                       borderSide: BorderSide.none,
                     ),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Password tidak boleh kosong';
-                    }
-                    return null;
-                  },
+                  // validator: (value) {
+                  //   if (value == null || value.isEmpty) {
+                  //     return 'Password tidak boleh kosong';
+                  //   }
+                  //   return null;
+                  // },
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: _login,
+                    onPressed: ()async{
+                      await AuthService().login(email: _emailController.text, password: _passwordController.text,context: context);
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor:
                           const Color.fromARGB(255, 206, 202, 202),
